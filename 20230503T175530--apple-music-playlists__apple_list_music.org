@@ -1,0 +1,69 @@
+#+title:      apple music playlists
+#+date:       [2023-05-03 Wed 17:55]
+#+filetags:   :apple:list:music:
+#+identifier: 20230503T175530
+* Work in progress
+
+* Classic Rock
+- Heart - Barracuda
+- Heart - Magic Man
+- Heart  -
+- Jethro Tull -
+- Led Zeppelin -
+- Simon and Garfunkel -
+- REO Speedwagon - Roll With the Changes
+- REO Speedwagon -
+- Dire Straits - Sultans of Swing
+- Dire Straits - Telegraph Road
+- Dire Straits - Romeo & Juliette
+- Ten Years After - I'd Love to Change the World
+- Supertramp - Live in Paris
+- ZZ Top - La Grange
+- Rush
+- Emerson Lake and Palmer
+- The Rolling Stones
+- Yes
+- Queen
+- Van Halen
+- Jimi Hendrix
+- The Beatles
+- Boston
+- Dion
+- ELO
+- Elton John
+- The Grateful Dead - Terrapin Station
+- Jefferson Airplane
+- The Kinks
+- Louis Prima - You Rascal You
+- Paul Simon
+- Simon and Garfunkel
+- Peter Frampton
+- Pink Floyd
+- R.E.M
+- Styx
+- Three Dog Night
+- The Eagles
+
+* Newer Stuff
+- Genesis
+- Genesis - Firth of Fifth
+- Genesis - Abacab
+- Journey
+- Lemon Jelly - Nice Time for Ducks
+- Little Feat - Dixie Chicken
+- Oasis
+- Olivia Newton John - Twist of Fate
+- Peter Gabriel
+- Simple Minds
+- Talking Heads
+- Tears for Fears
+- Tom Petty and the Hearbreakers
+- U2
+- Stone Temple Pilots
+
+* Alternative Rock
+- My Chemical Romance
+- Silversun Pickups
+- Fireflies
+
+* Classical Music
