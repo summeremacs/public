@@ -1,0 +1,95 @@
+:PROPERTIES:
+:YEAR:     1988
+:END:
+#+title:      80s movies
+#+date:       [2022-08-20 Sat 23:58]
+#+filetags:   :list:movie:
+#+identifier: 20220820T235830
+
+* 80s Movies
+- [X] A Fish Called Wanda
+- [ ] A Land Before Time
+- [ ] Baby's Day Out.
+- [ ] Back to the Future
+- [X] Beethoven
+- [X] Better Off Dead
+- [ ] Beverly Hills Cop 1 & 2
+- [X] Blade Runner
+- [ ] Blazing Saddles (1974)
+- [X] Brazil
+- [X] Clue
+- [ ] Conan the Barbarian
+- [X] Dark Crystal
+- [X] Dead Poets Society
+- [ ] Dennis the Menace
+- [ ] Die Hard
+- [ ] Dune
+- [ ] Dutch
+- [X] E.T.
+- [X] Ferris Bueller's Day Off
+- [X] Flashdance
+- [X] Footloose
+- [ ] Ghostbusters
+- [X] Heathers
+- [ ] High Anxiety (1977)
+- [ ] Highlander
+- [ ] History of the World, Part I (1981)
+- [ ] Home Alone
+- [ ] Killer Klowns from Outer Space
+- [ ] Kung Fury
+- [ ] Legend
+- [X] Little Shop of Horrors
+- [X] Mannequin
+- [ ] Mr. Mom
+- [ ] Mrs. Doubtfire
+- [ ] National Lampoon's Vacation
+- [X] Neverending Story
+- [X] Planes, Trains and Automobiles
+- [ ] Poltergeist
+- [X] Pretty in Pink
+- [ ] Raiders of the Lost Ark
+- [X] Risky Business
+- [ ] Robin Hood: Men in Tights (1993)
+- [ ] Robocop
+- [ ] Saint Elmo's Fire
+- [ ] She's Having a Baby
+- [ ] Short Circuit
+- [ ] Silent Movie (1976)
+- [X] Sixteen Candles
+- [ ] Some Kind of Wonderful
+- [X] Spaceballs
+- [ ] Spaceballs (1987)
+- [ ] Stand By Me
+- [X] The Breakfast Club
+- [ ] The Great Outdoors
+- [ ] The Last Starfighter
+- [ ] The Last Unicorn
+- [X] The Princess Bride
+- [X] The Producers (1967)
+- [ ] The Shining
+- [ ] The Terminator
+- [ ] The Twelve Chairs (1970)
+- [X] Top Gun
+- [ ] Total Recall
+- [ ] Tron
+- [ ] Twins
+- [ ] Uncle Buck
+- [X] War Games
+- [X] Weird Science
+- [X] Willow
+- [X] Young Frankenstein (1974)
+
+* Shows
+
+- [ ] Beauty & The Beast
+- [ ] Greatest American Hero
+- [ ] Knight Rider
+- [ ] Magnum P.I.
+- [ ] Dynasty
+- [ ] The Mysterious Cities of Gold (French/Japanese Anime)
+
+
+* 80s Broadway Shows
+
+- [ ] Cats
+- [ ] Phantom of the Opera
