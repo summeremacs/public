@@ -37,7 +37,7 @@
 - [ ] Home Alone
 - [ ] Killer Klowns from Outer Space
 - [ ] Kung Fury
-- [ ] Legend
+- [X] Legend
 - [X] Little Shop of Horrors
 - [X] Mannequin
 - [ ] Mr. Mom
