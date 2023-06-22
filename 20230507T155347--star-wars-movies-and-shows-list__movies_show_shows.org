@@ -4,35 +4,38 @@
 #+identifier: 20230507T155347
 
 * Star Wars Movies and Shows watching order (From @foxkitten and list below)
-
 List from [[https://www.polygon.com/2019/11/13/20959862/star-wars-watch-order-disney-plus-movies-shows-chronological-skywalker-saga][Polygon - The best order to watch all the Star Wars movies and shows]]
 
-** Star Wars: The Phantom Menace (Skip)
-** Star Wars: Attack of the Clones (Skip)
-** Star Wars: The Clone Wars (the animated movie)
-** Star Wars: The Clone Wars (the animated series)
-** Star Wars: Revenge of the Sith (Skip)
-** Star Wars: The Bad Batch (Skip for now)
-*** Solo: A Star Wars Story
-*** Obi-Wan Kenobi
-*** Star Wars Rebels animated series
-*** Andor season 1
-*** Rogue One: A Star Wars Story
-** Star Wars: A New Hope (Skip)
-** Star Wars: The Empire Strikes Back (Skip)
-** Star Wars: Return of the Jedi (Skip)
-*** The Mandalorian season 1
-*** The Mandalorian season 2
-*** The Book of Boba Fett
-*** The Mandalorian season 3
-*** Star Wars Resistance season 1
-*** Star Wars: The Force Awakens
-*** Star Wars: The Last Jedi
-*** Star Wars Resistance season 2
-*** Star Wars: The Rise of Skywalker
+* First Set [4/6]
+- [X] Star Wars: The Phantom Menace
+- [X] Star Wars: Attack of the Clones
+- [X] Star Wars: The Clone Wars (the animated movie)
+- [ ] Star Wars: The Clone Wars (the animated series)
+- [ ] Star Wars: Revenge of the Sith
+- [X] Star Wars: The Bad Batch (Skip for now)
+* Second Set [5/5]
+- [X] Solo: A Star Wars Story
+- [X] Obi-Wan Kenobi
+- [X] Star Wars Rebels animated series
+- [X] Andor season 1
+- [X] Rogue One
+* Third Set [3/3]
+- [X] Star Wars: A New Hope
+- [X] Star Wars: The Empire Strikes Back
+- [X] Star Wars: Return of the Jedi
+* Fourth Set [7/9]
+- [X] The Mandalorian season 1
+- [X] The Mandalorian season 2
+- [X] The Book of Boba Fett
+- [X] The Mandalorian season 3
+- [ ] Star Wars Resistance season 1 (Skip)
+- [X] Star Wars: The Force Awakens
+- [X] Star Wars: The Last Jedi
+- [ ] Star Wars Resistance season 2 (Skip)
+- [X] Star Wars: The Rise of Skywalker
 
 * Stuff to add:
-** The Acolyte
-** Ahsoka
-** Tales of the Jedi
-** Visions
+- [ ]  The Acolyte
+- [ ]  Ahsoka
+- [ ]  Tales of the Jedi
+- [ ]  Visions
