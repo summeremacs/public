@@ -6,12 +6,12 @@
 * Star Wars Movies and Shows watching order (From @foxkitten and list below)
 List from [[https://www.polygon.com/2019/11/13/20959862/star-wars-watch-order-disney-plus-movies-shows-chronological-skywalker-saga][Polygon - The best order to watch all the Star Wars movies and shows]]
 
-* First Set [4/6]
+* First Set [5/6]
 - [X] Star Wars: The Phantom Menace
 - [X] Star Wars: Attack of the Clones
 - [X] Star Wars: The Clone Wars (the animated movie)
 - [ ] Star Wars: The Clone Wars (the animated series)
-- [ ] Star Wars: Revenge of the Sith
+- [X] Star Wars: Revenge of the Sith
 - [X] Star Wars: The Bad Batch (Skip for now)
 * Second Set [5/5]
 - [X] Solo: A Star Wars Story
