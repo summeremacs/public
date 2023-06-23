@@ -1,0 +1,1871 @@
+STARTUP: overview
+
+* 🌳 Org Init File - This is heavily edited for Linux/PC and a bit messy still
+* Startup and Interface
+#+begin_src emacs-lisp
+
+  ;; Start Emacs Server
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
+
+  ;; Package archives
+  (require 'package)
+
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                           ;; ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
+
+  (unless (package-installed-p 'quelpa)
+    (with-temp-buffer
+      (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
+      (eval-buffer)
+      (quelpa-self-upgrade)))
+
+  ;; Exec path from shell for MacOS - Important!
+  (use-package exec-path-from-shell
+    :ensure t
+    :config
+    (setq exec-path-from-shell-variables
+          '("PATH" "SSH_AUTH_SOCK" "GPG_AGENT_INFO"))
+    (exec-path-from-shell-initialize))
+
+  (dolist (var '("SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO" "LANG" "LC_CTYPE" "NIX_SSL_CERT_FILE" "NIX_PATH"))
+    (add-to-list 'exec-path-from-shell-variables var))
+
+  ;; Remap keys for mac keyboard and meow
+;;  (setq mac-right-option-modifier 'hyper) ; make fn key do hyper
+;;  (setq mac-command-modifier 'control) ; make fn key do control
+;;  (setq mac-option-modifier 'meta) ; make fn key do meta
+;;  (setq mac-control-modifier 'super) ; make fn key do super
+
+  ;; Enable startup screen for emacs
+  (setq inhibit-splash-screen nil)
+  (setq initial-buffer-choice nil)
+  (setq inhibit-startup-screen nil)
+
+  ;; Load path
+  (add-to-list 'load-path "~/.emacs.d/packages/")
+
+  ;; Remove tool bar at the top of the window of emacs
+  (tool-bar-mode -1)
+
+  ;; Remember recently edited files
+  (recentf-mode 1)
+
+  ;; Desktop Save Mode
+  (desktop-save-mode)
+  ;; (add-to-list 'desktop-globals-to-save 'org-bullets-bullet-list)
+  (with-eval-after-load 'org-bullets
+    (add-to-list 'desktop-globals-to-save 'org-bullets-bullet-list))
+
+  ;; optional: automatically load previous session on startup
+  (desktop-read)
+
+  ;; Trim out whitespaces
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (setq require-final-newline t)
+
+
+  ;; Change yes or no to y or n
+  (fset 'yes-or-no-p 'y-or-n-p)
+
+  ;; Rever buffer with F5
+  (global-set-key (kbd "<f5>") 'revert-buffer)
+
+  ;; Turn off that fucking bell
+  (setq ring-bell-function 'ignore)
+
+  ;; ;; Line numbers
+  ;; (global-display-line-numbers-mode)
+
+  ;; Place custom vars (such as from customize-group) into custom-vars.el
+  (setq custom-file (locate-user-emacs-file "custom-vars.el"))
+  (load custom-file 'noerror 'nomessage)
+
+  ;; Automatically rever buffers for changed files
+  (global-auto-revert-mode 1)
+
+  ;; Beacon
+  (use-package beacon)
+  (beacon-mode 1)
+
+  ;; Highlight line
+  (global-hl-line-mode 1)
+
+  ;; Rainbow delimeters
+  (use-package rainbow-delimiters
+    :hook
+    (prog-mode . rainbow-delimiters-mode))
+
+  ;; Rainbow delimeters
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
+  ;; Rainbow mode
+  (use-package rainbow-mode
+    :diminish
+    :hook (emacs-lisp-mode . rainbow-mode))
+
+  ;; Ligatures
+ ;; (mac-auto-operator-composition-mode t)
+
+  ;; Highlight indent guides
+  (use-package highlight-indent-guides
+    :diminish
+    :hook
+    ((prog-mode yaml-mode) . highlight-indent-guides-mode)
+    :custom
+    (highlight-indent-guides-auto-enabled t)
+    (highlight-indent-guides-responsive t)
+    (highlight-indent-guides-method 'character)) ; column
+
+  ;; Smart-parens mode
+  (require 'smartparens-config)
+  (smartparens-global-mode t)
+
+  ;; MacOS Keys
+  (setq mac-option-modifier 'super)
+  (setq mac-command-modifier 'meta)
+
+  ;; Turn on Visual Line Mode
+  (global-visual-line-mode t)
+
+  ;; Projectile
+  (projectile-mode +1)
+
+  ;; Recommended keymap prefix on macOS
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+
+  ;; Switch to other window
+  (global-set-key (kbd "C-o") 'other-window)
+
+  ;; Switch to other frame
+  (global-set-key "\M-`" 'other-frame)
+
+  ;; Display time
+  (display-time-mode t)
+
+  ;; Turn off scrollbars
+  (scroll-bar-mode -1)
+
+  (setq custom-theme-directory "~/.emacs.d/packages/")
+  ;;(require 'sdcv-mode)
+
+  ;;   ;; Open file in OSX GUI File Window
+  ;; (setq osx-choose-file (let ((last-nonmenu-event nil)
+  ;;       (use-dialog-box t)
+  ;;       (use-file-dialog t))
+  ;;   (call-interactively 'find-file)))
+  ;; (global-set-key (kbd "s-f") 'osx-choose-file)
+
+
+  ;;(global-set-key (kbd "s-f") 'ns-open-file-using-panel)
+
+  ;; (global-set-key (kbd "s-f") 'find-file)
+  ;; (defadvice find-file-read-args (around find-file-read-args-always-use-dialog-box act)
+  ;;   "Simulate invoking menu item as if by the mouse; see `use-dialog-box'."
+  ;;   (let ((last-nonmenu-event nil))
+  ;;     ad-do-it))
+
+  ;; Open URL links in the current safari window
+
+  ;;   (defun open-in-safari (url &optional new-tab)
+  ;;     "Open URL in Safari with optional NEW-TAB flag.
+  ;;   If NEW-TAB is non-nil then open URL in a new tab (otherwise, open in new window)."
+  ;;     (let ((script
+  ;;            (concat
+  ;;             "tell application \"Safari\"\n"
+  ;;             (if new-tab
+  ;;                 "  activate\n"
+  ;;               "  tell window 1 to set current tab to (make new tab)\n")
+  ;;             "  set URL of document 1 to \"" url "\"\n"
+  ;;             "end tell\n")))
+  ;;       (start-process-shell-command "emacs-safari" nil "osascript" "-e" script)))
+
+  ;;   (setq browse-url-browser-function #'open-in-safari)
+
+  ;; (defun org-link-open (&optional other-window)
+  ;;   "Open the link at point in the default browser.
+  ;; If `other-window' is non-nil, open the link in a new window."
+  ;;   (interactive "P")
+  ;;   (let* ((link (org-element-lineage
+  ;;                 (org-element-context)
+  ;;                 '(link)
+  ;;                 t))
+  ;;          (path (org-element-property :path link)))
+  ;;     (when (and path (stringp path))
+  ;;       (browse-url path nil (if other-window 'new-window)))))
+
+#+end_src
+* Keep Folders Clean
+#+begin_src emacs-lisp
+
+  ;; Set backup directory for files
+  (setq backup-directory-alist `(("." . ,(expand-file-name "backups/" user-emacs-directory))))
+
+  ;; Set auto-saves directory for buffers
+  (make-directory (expand-file-name "auto-saves/" user-emacs-directory) t)
+
+  (setq auto-save-list-file-prefix (expand-file-name "auto-saves/sessions" user-emacs-directory) auto-save-file-name-transforms `((".*" ,(expand-file-name "auto-saves/" user-emacs-directory) t)))
+
+  ;; Disable lock files - enable if they cause trouble while compiling
+  ;; (setq create-lockfiles nil)
+
+  ;; Set directory for temp projectile and lsp files
+  (setq projectile-known-projects-file (expand-file-name "tmp/projectile-bookmarks.eld" user-emacs-directory) lsp-session-file (expand-file-name "tmp/.lsp-session.v1" user-emacs-directory))
+
+
+#+end_src
+* Extra Functions and Meow Editing
+#+begin_src emacs-lisp
+
+  ;; Prot sent me this to be the reverse of "fill paragraph"
+  (defun prot-simple-unfill-region-or-paragraph (&optional beg end)
+    "Unfill paragraph or, when active, the region.
+                  Join all lines in region delimited by BEG and END, if active,
+                  while respecting any empty lines (so multiple paragraphs are not
+                  joined, just unfilled).  If no region is active, operate on the
+                  paragraph.  The idea is to produce the opposite effect of both
+                  `fill-paragraph' and `fill-region'."
+    (interactive "r")
+    (let ((fill-column most-positive-fixnum))
+      (if (use-region-p)
+          (fill-region beg end)
+        (fill-paragraph))))
+
+  ;;Unfill region bind key
+  (global-set-key (kbd "C-S-q") 'prot-simple-unfill-region-or-paragraph)
+
+  ;; Meow editing
+  (require 'meow)
+  (defun meow-setup ()
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (meow-motion-overwrite-define-key
+     '("j" . meow-next)
+     '("k" . meow-prev)
+     '("<escape>" . ignore))
+    (meow-leader-define-key
+     ;; SPC j/k will run the original command in MOTION state.
+     '("j" . "H-j")
+     '("k" . "H-k")
+     ;; Use SPC (0-9) for digit arguments.
+     '("1" . meow-digit-argument)
+     '("2" . meow-digit-argument)
+     '("3" . meow-digit-argument)
+     '("4" . meow-digit-argument)
+     '("5" . meow-digit-argument)
+     '("6" . meow-digit-argument)
+     '("7" . meow-digit-argument)
+     '("8" . meow-digit-argument)
+     '("9" . meow-digit-argument)
+     '("0" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet))
+    (meow-normal-define-key
+     '("0" . meow-expand-0)
+     '("9" . meow-expand-9)
+     '("8" . meow-expand-8)
+     '("7" . meow-expand-7)
+     '("6" . meow-expand-6)
+     '("5" . meow-expand-5)
+     '("4" . meow-expand-4)
+     '("3" . meow-expand-3)
+     '("2" . meow-expand-2)
+     '("1" . meow-expand-1)
+     '("-" . negative-argument)
+     '(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("[" . meow-beginning-of-thing)
+     '("]" . meow-end-of-thing)
+     '("a" . meow-append)
+     '("A" . meow-open-below)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+     '("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-next-word)
+     '("E" . meow-next-symbol)
+     '("f" . meow-find)
+     '("g" . meow-cancel-selection)
+     '("G" . meow-grab)
+     '("h" . meow-left)
+     '("H" . meow-left-expand)
+     '("i" . meow-insert)
+     '("I" . meow-open-above)
+     '("j" . meow-next)
+     '("J" . meow-next-expand)
+     '("k" . meow-prev)
+     '("K" . meow-prev-expand)
+     '("l" . meow-right)
+     '("L" . meow-right-expand)
+     '("m" . meow-join)
+     '("n" . meow-search)
+     '("o" . meow-block)
+     '("O" . meow-to-block)
+     '("p" . meow-yank)
+     '("q" . meow-quit)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+     '("s" . meow-kill)
+     '("t" . meow-till)
+     '("u" . meow-undo)
+     '("U" . meow-undo-in-selection)
+     '("v" . meow-visit)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-line)
+     '("X" . meow-goto-line)
+     '("y" . meow-save)
+     '("Y" . meow-sync-grab)
+     '("z" . meow-pop-selection)
+     '("'" . repeat)
+     '("<escape>" . ignore)))
+
+  (meow-setup)
+  (meow-global-mode 1)
+
+  (setq meow-expand-hint-remove-delay 8)
+
+  (global-set-key (kbd "s-m") 'meow-motion-mode)
+
+                #+end_src
+* Nyan Mode
+#+begin_src emacs-lisp
+
+  (require 'nyan-mode)
+  (nyan-mode)
+  (setq zone-programs [zone-nyan])
+
+#+end_src
+
+* 🌳 Look and Feel 🌳
+* Themes
+#+begin_src emacs-lisp
+
+  (require 'ef-themes)
+
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/packages/themes/")
+  ;; Org tables and spacing-sensitive elements stay monospaced.
+  (setq ef-themes-mixed-fonts t)
+
+  ;; This sets the height of headings (among others).
+  (setq ef-themes-headings
+        '((0 . (1.3))
+          (1 . (1.2))
+          (2 . (1.2))
+          (3 . (1.2))
+          (4 . (1.1))
+          (5 . (1.1))
+          (6 . (1.1))
+          (7 . (1.0))
+          (t . (1.0))))
+  (load-theme 'ef-summer :no-confirm) ;; Pink
+  ;;(load-theme 'dracula :no-confirm) ;; The official Dracula theme
+
+  (defvar my/themes '(ef-summer fairyfloss catppuccin monokai-pro monokai-pro-classic monokai-pro-spectrum spacemacs-dark spacemacs-light nord dracula gruvbox-dark-hard gruvbox-light-soft material-light material ef-day ef-cyprus ef-spring ef-kassio ef-symbiosis)
+    "List of themes to cycle through")
+
+  (defvar my/current-theme 0 "index of current theme")
+
+  (defun my/rotate-theme ()
+    "Rotate through list of themes, disabling any active theme and enabling the new one."
+    (interactive)
+    (setq my/current-theme (mod (1+ my/current-theme) (length my/themes)))
+    (let ((new-theme (nth my/current-theme my/themes)))
+      (unless (memq new-theme custom-enabled-themes)
+        (dolist (active-theme custom-enabled-themes)
+          (disable-theme active-theme)))
+      (load-theme new-theme t)
+      (message "Switched to theme: %s" new-theme))) ; Display switched theme in mini buffer
+
+  (global-set-key (kbd "<f12>") 'my/rotate-theme)
+
+  ;; ;; Code for Catppuccin switching
+  ;; (setq catppuccin-flavor 'frappe) ;; or 'frappe 'latte, 'macchiato, or 'mocha
+  ;; (catppuccin-reload)
+
+#+end_src
+* Fonts
+#+begin_src emacs-lisp
+  ;; Colour themes
+  (use-package color-theme-modern
+    :ensure t)
+
+  ;; Fonts
+  ;; (set-face-attribute 'default nil :font "Cartograph CF-14" :weight 'Regular)
+  ;; (set-face-attribute 'mode-line nil :font "Cartograph CF-14" :weight 'Light)
+  ;; (set-face-attribute 'mode-line-inactive nil :font "Cartograph CF-14" :weight 'Thin)
+  ;; (set-face-attribute 'font-lock-comment-face nil :font "Cartograph CF-14" :slant 'Italic)
+  ;; (set-face-attribute 'font-lock-builtin-face nil :font "Cartograph CF-14" :slant 'Italic)
+  ;; (set-face-attribute 'fixed-pitch nil :font "Cartograph CF-14" :weight 'Regular)
+  ;; (set-face-attribute 'font-lock-variable-name-face nil :font "Cartograph CF-14" :slant 'Italic)
+  ;; ;; (set-face-attribute 'variable-pitch nil :font "Brioso Pro-20" :weight 'Regular)
+  ;; (set-face-attribute 'variable-pitch nil :font "ITC Souvenir Std-20" :weight 'Light)
+
+  ;; (defun my-org-mode-setup ()
+  ;;   "Custom configuration for Org mode."
+  ;;   (variable-pitch-mode 1)
+  ;;   (mapc
+  ;;    (lambda (face) ;; Set font faces for headings, blocks, and bullets
+  ;;      ;; (set-face-attribute face nil :font "Brioso Pro-20"))
+  ;;    (set-face-attribute face nil :font "ITC Souvenir Std-20"))
+
+  ;;   (list 'org-level-1
+  ;; 	'org-level-2
+  ;; 	'org-level-3
+  ;; 	'org-level-4
+  ;; 	'org-level-5
+  ;; 	'org-level-6
+  ;; 	'org-level-7
+  ;; 	'org-level-8
+  ;; 	'org-quote
+  ;; 	'org-verbatim
+  ;; 	'org-list-dt
+  ;; 	'org-checkbox))
+  ;; (set-face-attribute 'org-table nil :font "Cartograph CF-14" :weight 'Regular)) ;; Set fixed-width font for tables
+
+  ;;(add-hook 'org-mode-hook 'my-org-mode-setup) ;; Apply configuration to Org mode files
+
+  ;; Code from Korven to fix fonts in non ef-themes in code blocks
+  (defun conf/org-font-setup ()
+    "Setup fixed-pitch font for Org."
+    (custom-set-faces
+     '(org-block ((t (:inherit fixed-pitch))))
+     '(org-table ((t (:inherit fixed-pitch))))
+     '(org-formula ((t (:inherit fixed-pitch))))
+     '(org-code ((t (:inherit fixed-pitch))))
+     '(org-verbatim ((t (:inherit fixed-pitch))))
+     '(org-special-keyword ((t (:inherit fixed-pitch))))
+     '(org-checkbox ((t (:inherit fixed-pitch))))
+     '(line-number ((t (:inherit fixed-pitch))))
+     '(line-number-current-line ((t (:inherit fixed-pitch))))
+     '(org-block-begin-line ((t (:inherit fixed-pitch))))
+     '(org-block-end-line ((t (:inherit org-block-begin-line))))))
+
+  (add-to-list 'org-mode-hook #'conf/org-font-setup)
+
+
+#+end_src
+* All the Icons
+#+begin_src emacs-lisp
+
+;; All the Icons config
+  (when (display-graphic-p)
+    (require 'all-the-icons))
+  ;; or
+  (use-package all-the-icons
+    :if (display-graphic-p))
+
+#+end_src
+* Rainbow Mode (for hex code colours)
+#+begin_src emacs-lisp
+
+  (require 'rainbow-mode)
+  (setq rainbow-ansi-colors nil)
+  (setq rainbow-x-colors nil)
+
+#+end_src
+* Prism - to colourise code blocks
+#+begin_src emacs-lisp
+
+    ;; (use-package prism
+    ;; :quelpa (prism :fetcher github :repo "alphapapa/prism.el"))
+
+  ;; (require 'prism)
+
+    ;; (prism-set-colors :num 16
+    ;; :desaturations (cl-loop for i from 0 below 16
+    ;;                         collect (* i 2.5))
+    ;; :lightens (cl-loop for i from 0 below 16
+    ;;                    collect (* i 2.5))
+    ;; :colors (list "dodgerblue" "dark pink" "dark green")
+
+    ;; :comments-fn
+    ;; (lambda (color)
+    ;;   (prism-blend color
+    ;;                (face-attribute 'font-lock-comment-face :foreground) 0.25))
+
+    ;; :strings-fn
+    ;; (lambda (color)
+    ;;   (prism-blend color "dark pink" 0.5)))
+
+
+  (add-hook #'prism-mode 'emacs-lisp-mode-hook)
+
+#+end_SRC
+* Diminish - diminish minor modes
+#+begin_src emacs-lisp
+
+    (require 'diminish)
+
+    (diminish 'rainbow-mode nil)
+    (diminish 'projectile-mode nil)
+    (diminish 'undo-tree-mode nil)
+    (diminish 'flyspell-mode " FS ")
+    (diminish 'flycheck-mode nil)
+    (diminish 'auto-complete-mode nil)
+    (diminish 'global-auto-complete-mode nil)
+    (diminish 'auto-composition-mode nil)
+    (diminish 'which-key-mode nil)
+    (diminish 'overwrite-mode nil)
+    (diminish 'org-indent-mode nil)
+    (diminish 'global-visual-line-mode nil)
+  (diminish 'smartparens-mode nil)
+  (diminish 'smartparens-global-mode nil)
+
+#+end_src
+* Moody for Tabs and Ribbon Modeline at the bottom
+#+begin_src emacs-lisp
+
+  (use-package moody
+    :config
+    (setq x-underline-at-descent-line t)
+    (moody-replace-mode-line-buffer-identification)
+    (moody-replace-vc-mode)
+    (moody-replace-eldoc-minibuffer-message-function))
+
+#+end_src
+
+
+* 🌳 Search and Completion 🌳
+* Avy
+#+begin_src emacs-lisp
+
+  ;; Avy for jumping around
+  (use-package avy
+    :ensure t
+    :bind ("C-s" . avy-goto-char))
+
+#+end_src
+* Which-Key
+#+begin_src emacs-lisp
+
+  ;; Which-key package to bring up menu for commands
+  (use-package which-key
+    :ensure t
+    :config (which-key-mode))
+  (setq which-key-idle-delay 0.1)
+  (which-key-setup-minibuffer)
+
+#+end_src
+* DWIM Shell
+#+begin_src emacs-lisp
+
+  (require 'dwim-shell-command)
+  (use-package dwim-shell-command
+  :ensure t
+  :config
+  (use-package dwim-shell-commands))
+
+#+end_src
+* Vertico completion
+#+begin_src emacs-lisp
+
+  ;; Enable vertico
+  (use-package vertico
+    :init
+    (vertico-mode)
+
+    ;; Different scroll margin
+    ;; (setq vertico-scroll-margin 0)
+
+    ;; Show more candidates
+    ;; (setq vertico-count 20)
+
+    ;; Grow and shrink the Vertico minibuffer
+    ;; (setq vertico-resize t)
+
+    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+    ;; (setq vertico-cycle t)
+    )
+
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+  (use-package savehist
+    :init
+    (savehist-mode))
+
+  ;; A few more useful configurations...
+  (use-package emacs
+    :init
+    ;; Add prompt indicator to `completing-read-multiple'.
+    ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+    (defun crm-indicator (args)
+      (cons (format "[CRM%s] %s"
+                    (replace-regexp-in-string
+                     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                     crm-separator)
+                    (car args))
+            (cdr args)))
+    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+    ;; Do not allow the cursor in the minibuffer prompt
+    (setq minibuffer-prompt-properties
+          '(read-only t cursor-intangible t face minibuffer-prompt))
+    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+    ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+    ;; Vertico commands are hidden in normal buffers.
+    ;; (setq read-extended-command-predicate
+    ;;       #'command-completion-default-include-p)
+
+    ;; Enable recursive minibuffers
+    (setq enable-recursive-minibuffers t))
+
+  ;;  Configure directory extension.
+  (use-package vertico-directory
+    :after vertico
+    :ensure nil
+    ;; More convenient directory navigation commands
+    :bind (:map vertico-map
+                ("RET" . vertico-directory-enter)
+                ("DEL" . vertico-directory-delete-char)
+                ("M-DEL" . vertico-directory-delete-word))
+    ;; Tidy shadowed file names
+    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+#+end_src
+* Orderless Completion
+#+begin_src emacs-lisp
+
+  (use-package orderless
+    :ensure t
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
+
+#+end_src
+* Marginalia for searching commands
+#+begin_src emacs-lisp
+
+;; Enable richer annotations using the Marginalia package
+(use-package marginalia
+  ;; Either bind `marginalia-cycle` globally or only in the minibuffer
+  :bind (("M-A" . marginalia-cycle)
+         :map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+
+  ;; The :init configuration is always executed (Not lazy!)
+  :init
+
+  ;; Must be in the :init section of use-package such that the mode gets
+  ;; enabled right away. Note that this forces loading the package.
+  (marginalia-mode))
+
+#+end_src
+* Consult for Minibuffer search etc..
+#+begin_src emacs-lisp
+;; Example configuration for Consult
+(use-package consult
+  ;; Replace bindings. Lazily loaded due by `use-package'.
+  :bind (;; C-c bindings (mode-specific-map)
+         ("C-c M-x" . consult-mode-command)
+         ("C-c h" . consult-history)
+         ("C-c k" . consult-kmacro)
+         ("C-c m" . consult-man)
+         ("C-c i" . consult-info)
+         ([remap Info-search] . consult-info)
+         ;; C-x bindings (ctl-x-map)
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ;; Custom M-# bindings for fast register access
+         ("M-#" . consult-register-load)
+         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ("C-M-#" . consult-register)
+         ;; Other custom bindings
+         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ;; M-g bindings (goto-map)
+         ("M-g e" . consult-compile-error)
+         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+         ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings (search-map)
+         ("M-s d" . consult-find)
+         ("M-s D" . consult-locate)
+         ("M-s g" . consult-grep)
+         ("M-s G" . consult-git-grep)
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line)
+         ("M-s L" . consult-line-multi)
+         ("M-s k" . consult-keep-lines)
+         ("M-s u" . consult-focus-lines)
+         ;; Isearch integration
+         ("M-s e" . consult-isearch-history)
+         :map isearch-mode-map
+         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+         ;; Minibuffer history
+         :map minibuffer-local-map
+         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+
+  ;; Enable automatic preview at point in the *Completions* buffer. This is
+  ;; relevant when you use the default completion UI.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+
+  ;; The :init configuration is always executed (Not lazy)
+  :init
+
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  ;; Configure other variables and modes in the :config section,
+  ;; after lazily loading the package.
+  :config
+
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  ;; (setq consult-preview-key 'any)
+  ;; (setq consult-preview-key "M-.")
+  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
+  ;; For some commands and buffer sources it is useful to configure the
+  ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  (consult-customize
+   consult-theme :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-file-register
+   consult--source-recent-file consult--source-project-recent-file
+   ;; :preview-key "M-."
+   :preview-key '(:debounce 0.4 any))
+
+  ;; Optionally configure the narrowing key.
+  ;; Both < and C-+ work reasonably well.
+  (setq consult-narrow-key "<") ;; "C-+"
+
+  ;; Optionally make narrowing help available in the minibuffer.
+  ;; You may want to use `embark-prefix-help-command' or which-key instead.
+  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+  ;; By default `consult-project-function' uses `project-root' from project.el.
+  ;; Optionally configure a different project root function.
+  ;;;; 1. project.el (the default)
+  ;; (setq consult-project-function #'consult--default-project--function)
+  ;;;; 2. vc.el (vc-root-dir)
+  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+  ;;;; 3. locate-dominating-file
+  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+  ;;;; 4. projectile.el (projectile-project-root)
+  ;; (autoload 'projectile-project-root "projectile")
+  ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
+  ;;;; 5. No project support
+  ;; (setq consult-project-function nil)
+)
+
+
+  ;; Use `consult-completion-in-region' if Vertico is enabled.
+        ;; Otherwise use the default `completion--in-region' function.
+        (setq completion-in-region-function
+              (lambda (&rest args)
+                (apply (if vertico-mode
+                           #'consult-completion-in-region
+                         #'completion--in-region)
+                       args)))
+
+
+        ;; Consult-dir for bookmarks expansion
+        (use-package consult-dir
+        :ensure t
+        :bind (("C-x C-d" . consult-dir)
+               :map vertico-map
+               ("C-x C-d" . consult-dir)
+               ("C-x C-j" . consult-dir-jump-file)))
+
+  #+end_src
+* Embark for minibuffer options/menus on selections
+#+begin_src emacs-lisp
+
+  (use-package marginalia
+    :ensure t
+    :config
+    (marginalia-mode))
+
+  (use-package embark
+    :ensure t
+
+    :bind
+    (("C-." . embark-act)         ;; pick some comfortable binding
+     ("C-;" . embark-dwim)        ;; good alternative: M-.
+     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+    :init
+
+    ;; Optionally replace the key help with a completing-read interface
+    (setq prefix-help-command #'embark-prefix-help-command)
+
+    :config
+
+    ;; Hide the mode line of the Embark live/completions buffers
+    (add-to-list 'display-buffer-alist
+                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                   nil
+                   (window-parameters (mode-line-format . none)))))
+
+  ;; Consult users will also want the embark-consult package.
+  (use-package embark-consult
+    :ensure t
+    :after (embark consult)
+    :demand t ; only necessary if you have the hook below
+    ;; if you want to have consult previews as you move around an
+    ;; auto-updating embark collect buffer
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode))
+
+#+end_src
+* Auto-Complete
+#+begin_src emacs-lisp
+
+  (use-package auto-complete
+    :ensure t
+    :init
+    (progn
+      (ac-config-default)
+      (global-auto-complete-mode t)
+      ))
+
+  (defun auto-complete-mode-maybe ()
+  "No maybe for you. Only AC!"
+  (unless (minibufferp (current-buffer))
+    (auto-complete-mode 1)))
+
+#+end_src
+* Macros for Abbrevs etc...
+#+begin_src emacs-lisp
+
+  ;; Insert Euro
+    (fset 'euro
+       (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([24 56 return 35 120 50 48 65 67 return] 0 "%d")) arg)))
+  ;; Type M-x euro to insert a euro symbol.
+
+   #+end_src
+* Deadgrep
+#+begin_src emacs-lisp
+
+  (global-set-key (kbd "<f6>") #'deadgrep)
+
+#+end_src
+* Corfu for autocomplete with Vertico
+#+begin_src emacs-lisp
+
+(use-package corfu
+  ;; Optional customizations
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+  ;; Enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since Dabbrev can be used globally (M-/).
+  ;; See also `corfu-exclude-modes'.
+  :init
+  (global-corfu-mode))
+
+;; A few more useful configurations...
+(use-package emacs
+  :init
+  ;; TAB cycle if there are only few candidates
+  (setq completion-cycle-threshold 3)
+
+  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (setq tab-always-indent 'complete))
+
+#+end_src
+* Isearch
+#+begin_src emacs-lisp
+
+  (define-key dired-mode-map (kbd "<f8>") 'isearch-forward)
+
+#+END_SRC
+
+* 🌳 Utilities and Editing 🌳
+* Dired
+#+begin_src emacs-lisp
+
+  ;; Set 'gls' CLI program to run ls in emacs for dired.
+  (setq insert-directory-program "gls" dired-use-ls-dired t)
+  (use-package dired
+    :ensure nil
+    :commands (dired dired-jump)
+    :custom ((dired-listing-switches "-agho --group-directories-first"))
+    )
+
+  ;; omit .DS_Store
+  (setq-default dired-omit-files-p t)
+  (setq dired-omit-files "^\\.DS_Store")
+  (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
+
+  (setq delete-by-moving-to-trash t)
+
+  ;; ;; Enable to use delete on TRAMP but disable afterwards because it deletes permanently
+  ;; (defun system-move-file-to-trash (filename)
+  ;;   (process-file-shell-command
+  ;;    (format "trash %S" (file-local-name filename))))
+
+  ;; Package to use only one dired buffer so it kills all previous dired buffers
+  ;; (use-package dired-single)
+
+  (use-package all-the-icons-dired
+    :hook (dired-mode . all-the-icons-dired-mode))
+
+  ;; Package to show/hide dotfiles in a directory
+  (defun my-dired-mode-hook ()
+    "My `dired' mode hook."
+    ;; To hide dot-files by default
+    (dired-hide-dotfiles-mode))
+
+  (setq image-use-external-converter t)
+
+  ;; To toggle hiding
+  ;; (define-key dired-mode-map "h" #'dired-hide-dotfiles-mode)
+  ;; (add-hook 'dired-mode-hook #'my-dired-mode-hook)
+
+  ;; Filetags - to display tags in dired
+  ;;   (setq filetags-enforce-controlled-vocabulary t)
+  ;; (setq filetags-controlled-vocabulary '(("winter" "summer") ("emacs")))
+  (global-set-key (kbd "s-t") 'filetags-dired-update-tags)
+
+
+
+#+end_src
+* Undo Tree
+#+begin_src emacs-lisp
+
+  (require 'undo-tree)
+  (global-undo-tree-mode)
+
+  ;; Save undo history in a directory
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+
+#+end_src
+* iBuffer, Winner, Buffer-Flip
+#+begin_src emacs-lisp
+
+  ;; iBuffer
+  (use-package all-the-icons-ibuffer
+    :ensure t
+    :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
+  (defalias 'list-buffers 'ibuffer-other-window)
+
+  ;; Winner mode for undo/redo windows
+  (winner-mode 1)
+
+  ;; Move through windows with shift-arrows - Conflicts with org toggles shift-arrows so took it out
+  ;;(windmove-default-keybindings)
+
+  (use-package buffer-flip
+    :ensure t
+    :bind  (("s-<tab>" . buffer-flip)
+            :map buffer-flip-map
+            ( "s-<tab>" .   buffer-flip-forward)
+            ( "s-S-<tab>" . buffer-flip-backward)
+            ( "s-ESC" .     buffer-flip-abort))
+    :config
+    (setq buffer-flip-skip-patterns
+          '("^\\*consult\\b"
+            "^\\*messages\\*$"
+            "^\\*Warnings\\*$")))
+
+#+end_src
+* Dimmer
+#+begin_src emacs-lisp
+
+  ;; Dimmer
+  (require 'dimmer)
+  (dimmer-mode t)
+  (setq dimmer-fraction 0.4)
+
+#+end_src
+* Flycheck
+#+begin_src emacs-lisp
+
+  ;;Flycheck
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+
+  #+end_src
+* Flyspell
+#+begin_src emacs-lisp
+
+  ;; Enable `flyspell-mode' in all major modes that are derived from
+  ;; `text-mode' (Org, Markdown, Message)...
+  (add-hook 'text-mode-hook #'flyspell-mode)
+
+  ;; Enable `flyspell-mode' for comments and strings in all programming
+  ;; modes.
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+
+  ;; British english dictionary
+  ;; (setq ispell-dictionary "british")
+
+#+end_src
+* Tab bar mode
+#+begin_src emacs-lisp
+
+  (tab-bar-mode t)
+
+  ;; Set global key for Persp-next to cycle through perspectives to super-1
+  (global-unset-key (kbd "C-1"))
+  (global-unset-key (kbd "C-2"))
+  (global-set-key (kbd "C-2") 'tab-next)
+  (global-set-key (kbd "C-1") 'tab-previous)
+
+  (when (< 26 emacs-major-version)
+    (tab-bar-mode 1)                           ;; enable tab bar
+    (setq tab-bar-show 1)                      ;; hide bar if <= 1 tabs open
+    (setq tab-bar-close-button-show nil)       ;; hide tab close / X button
+    (setq tab-bar-new-tab-choice "*dashboard*");; buffer to show in new tabs
+    (setq tab-bar-tab-hints t)                 ;; show tab numbers
+    (setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator)))
+  ;; elements to include in bar
+
+#+end_src
+* Try package
+#+begin_src emacs-lisp
+
+  ;; Try package to try out packages without installing them
+    (use-package try
+      :ensure t)
+
+#+end_src
+
+* 🌳 Applications 🌳
+* Org Mode
+#+begin_src emacs-lisp
+
+  ;; Set Org Directory
+  (setq org-directory "~/Documents/sync/org")
+
+  ;; Org Agenda Keybind
+  (global-set-key (kbd "C-c a") 'org-agenda)
+
+  ;; Org Capture Key
+  (global-set-key (kbd "C-c c") 'org-capture)
+
+  ;; Org archive key
+  (eval-after-load "flyspell"
+    '(define-key flyspell-mode-map (kbd "C-c $") nil))
+
+  ;; Jump to nearest heading star
+  (defun org-jump-to-heading-beginning()
+    (interactive)
+    (org-back-to-heading)
+    (beginning-of-line))
+  (define-key org-mode-map (kbd "<f9>") 'org-jump-to-heading-beginning)
+
+  ;; Set days shown to two weeks
+  (setq org-agenda-span 14)
+
+  ;; ;; Align tags to the right
+  (setq org-tags-column 77)
+  (setq org-auto-align-tags t)
+
+  ;; Hide leading stars
+  (setq org-hide-leading-stars t)
+
+  ;; Change - in lists like - [ ] to a dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+  ;; Blank line before headers
+  (customize-set-variable 'org-blank-before-new-entry
+                          '((heading . nil)
+                            (plain-list-item . nil)))
+  (setq org-cycle-separator-lines 1)
+
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(default fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(default fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(default fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "➡️ NEXT(n)" "|" "😀 DONE(d!)")
+          (sequence "‼️ URGENT(u)" "📑 BACKLOG(b)" "🧼 CHORE(o)" "📊 PLAN(p)" "☁️ SOMEDAY(s)" "🏁 READY(r)" "🏃‍♀️ ACTIVE(a)" "📖 REVIEW(v)" "📆 MEETING(m)" "🕦 WAIT(w@/!)" "☕️ HOLD(h)" "|" "✅ COMPLETED(c)" "🚫 CANCELLED(k@)")))
+
+
+
+  ;; Org notes directory
+  (setq org-default-notes-file "~/Documents/sync/org/capture.org")
+
+  ;; Org Agenda Files Location
+  ;; (setq org-agenda-files '("~/Documents/sync/org/refile"
+  ;;                          "~/Documents/sync/org/notes/lists"
+  ;;                          "~/Documents/sync/org/notes/articles"
+  ;;                          "~/Documents/sync/org/notes/reference")) ;; - Used for the entire directory.
+  ;; Org Agenda Log Mode
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+
+  ;; Agenda Holidays
+  (setq org-agenda-include-diary t)
+  (setq calendar-christian-all-holidays-flag t)
+  (setq calendar-hebrew-all-holidays-flag t)
+  (setq calendar-islamic-all-holidays-flag t)
+  (setq holiday-general-holidays-flag t)
+  (setq holiday-other-holiday
+        '((holiday-fixed 1 1 "Jour de l'an")
+          (holiday-fixed 5 8 "Victoire 45")
+          (holiday-fixed 7 14 "Fête nationale")
+          (holiday-fixed 8 15 "Assomption")
+          (holiday-fixed 11 1 "Toussaint")
+          (holiday-fixed 11 11 "Armistice 18")
+          (holiday-easter-etc 1 "Lundi de Pâques")
+          (holiday-easter-etc 39 "Ascension")
+          (holiday-easter-etc 50 "Lundi de Pentecôte")
+          (holiday-fixed 1 6 "Épiphanie")
+          (holiday-fixed 2 2 "Chandeleur")
+          (holiday-fixed 2 14 "Saint Valentin")
+          (holiday-fixed 5 1 "Fête du travail")
+          (holiday-fixed 5 8 "Commémoration de la capitulation de l'Allemagne en 1945")
+          (holiday-fixed 6 21 "Fête de la musique")
+          (holiday-fixed 11 2 "Commémoration des fidèles défunts")
+          (holiday-fixed 12 25 "Noël")
+          ;; fêtes à date variable
+          (holiday-easter-etc 0 "Pâques")
+          (holiday-easter-etc 49 "Pentecôte")
+          (holiday-easter-etc -47 "Mardi gras")))
+  (setq holiday-other-holiday-flag t)
+
+  (setq holiday-bahai-holidays nil)
+
+  ;; Set Archive File
+  (setq org-archive-location (concat "~/Documents/sync/org/archives/archive-"(format-time-string "%Y" (current-time))".org::"))
+
+  ;; Save archive buffers when refile takes place
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+  ;; org refile directory
+  ;;(setq org-refile-targets '((nil :maxlevel . 3)
+  ;;                           ("~/Documents/sync/org/refile/" :maxlevel . 3)))
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
+
+  (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+  (setq org-refile-use-outline-path t)                  ; Show full paths for refiling
+  (setq org-archive-subtree-add-inherited-tags t) ;; Save inherited tags when archiving
+
+
+  ;; Allow org to refile to top level headers instead of existing headers only
+  ;; (setq org-refile-use-outline-path 'file) ;; Currently unused
+
+  ;; Allow org-refile to create parent header nodes
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+
+  ;; Org Download
+  (require 'org-download)
+
+  ;; Set Image Width for previews
+  (setq org-image-actual-width 400)
+
+  ;; Drag-and-drop to `dired`
+  (add-hook 'dired-mode-hook 'org-download-enable)
+  (setq-default org-download-image-dir "~/Documents/sync/org/images")
+
+  ;; Org-attach directory for images
+  (setq org-attach-id-dir "~/Documents/sync/org/images/")
+
+  ;; Org-ID location
+  (setq org-id-locations-file (concat org-directory ".orgids"))
+  (setq org-id-locations-file-relative t)
+
+  ;; Update Header counters upon save
+  (defun custom_org_auto_check()
+    (org-update-checkbox-count t))
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (add-hook 'after-save-hook 'custom_org_auto_check nil 'make-it-local)))
+
+  ;; Capture Templates
+  (setq org-capture-templates '(
+
+                                ("t" "Todo" entry (file "~/Documents/sync/org/refile/inbox.org")"* TODO %?\n%U\n%a\n")
+
+                                ("b" "Bookmark" entry (file+headline "~/Documents/sync/org/refile/inbox.org" "Inbox") "** [[%:link][%:description]]\n")
+
+                                ("e" "Meeting" entry (file "~/Documents/sync/org/refile/inbox.org") "* MEETING with %? :MEETING:\n%t")
+
+                                ;; ("n" "Note" entry (file "~/Documents/sync/org/refile/inbox.org")"* %? :NOTE:\n%U\n%a\n")
+
+                                ("p" "Phone call" entry (file "~/Documents/sync/org/refile/inbox.org")"* PHONE %? :PHONE:\n%U")
+
+                                ("C" "Protocol Link" entry (file+headline "~/Documents/sync/org/refile/inbox.org" "Inbox") "* %? [[%:link][%:description]]\n")
+
+                                ("w" "Protocol" entry (file+headline "~/Documents/sync/org/refile/inbox.org" "Inbox") "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+
+                                ;; Capture for Safari and Org-Protocol
+                                ("u" "URL capture from Safari" entry
+                                 (file+olp+datetree "~/Documents/sync/org/refile/inbox.org")
+                                 "* %i    :safari:url:\n%U\n\n")
+
+                                ;; Capture for Email
+                                ("m" "Email Workflow")
+                                ("mf" "Follow Up" entry (file+olp "~/Documents/sync/org/refile/email.org" "Follow Up")
+                                 "* TODO Follow up with %:fromname on %a\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n%i" :immediate-finish t)
+                                ("mr" "Read Later" entry (file+olp "~/Documents/sync/org/refile/email.org" "Read Later")
+                                 "* TODO Read %:subject\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%a\n%i" :immediate-finish t)
+
+
+                                ))
+
+  ;; Calendar view of agenda with calfw
+  (require 'calfw)
+  (require 'calfw-org)
+  (global-set-key (kbd "C-M-a") 'cfw:open-org-calendar)
+
+
+#+end_src
+* Org Modern
+#+begin_src emacs-lisp
+
+
+  (require 'org-modern)
+
+  (add-hook 'org-mode-hook #'org-modern-mode)
+  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+
+  ;; Don't touch tables
+  ;; (setq org-modern-table nil)
+  ;; (setq org-modern-table-vertical 1)
+  ;; (setq org-modern-table-horizontal 1)
+  ;; (setq org-modern-horizontal-rule nil)
+  ;; (setq org-modern-variable-pitch 'fixed-pitch)
+
+  ;; Add indent mode to override org-modern non-indent
+  (setq org-startup-indented t)
+
+  ;; Start Org showing images
+  (setq org-startup-with-inline-images t)
+
+  ;; Add frame borders and window dividers
+  (modify-all-frames-parameters
+   '((right-divider-width . 15)
+     (internal-border-width . 15)))
+  (dolist (face '(window-divider
+                  window-divider-first-pixel
+                  window-divider-last-pixel))
+    (face-spec-reset-face face)
+    (set-face-foreground face (face-attribute 'default :background)))
+  (set-face-background 'fringe (face-attribute 'default :background))
+
+  (setq
+   ;; Edit settings
+   org-auto-align-tags t
+   org-tags-column 77
+   org-catch-invisible-edits 'show-and-error
+   org-special-ctrl-a/e t
+   org-insert-heading-respect-content t
+   org-hide-emphasis-markers t
+   org-pretty-entties t
+   ;;org-ellipsis "…"
+   org-ellipsis " ⭐️"
+
+   ;; Agenda styling
+   org-agenda-tags-column 77
+   org-agenda-block-separator ?─
+   org-agenda-time-grid
+   '((daily today require-timed)
+     (800 1000 1200 1400 1600 1800 2000)
+     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+   org-agenda-current-time-string
+   "⭠ now ─────────────────────────────────────────────────")
+
+  ;;(setq org-modern-star '("💝" "💖" "❤️" "🧡" "💛" "💚" "💜"))
+  ;;(setq org-modern-star '("🍑" "🍎" "🍐" "🍊" "🍋" "🍉" "🍇" "🍓"))
+  ;;(setq org-modern-star '("🐝" "🦄" "🦋" "🐙" "🐳" "🐬" "🐠" "🐡"))
+  (setq org-modern-star '("🎄" "🌳" "🌵" "🪴" "🌴" "🍀" "🌿" "🌱"))
+  ;;(setq org-modern-star '("🌼" "🌸" "🌺" "🌻" "🥀" "🌹" "🌷" "💐"))
+  ;;(setq org-modern-star '("🐻" "🐼" "🐻‍❄️" "🦊" "🐹" "🐱" "🐶" "🐨"))
+  ;;(setq org-modern-star '("☀️" "🌤️" "⛅️" "🌥️" "☁️" "🌦️" "🌧️" "🌨️"))
+
+
+  ;; Sent to me by Prot
+  (defvar my-whimsical-org-stars
+    '(("♥️" ("💝" "💖" "❤️" "🧡" "💛" "💚" "💜") "One love; many colours :)")
+      ("🌸" ("🌼" "🌸" "🌺" "🪷" "🥀" "🌹" "🌷" "💐") "It's Springtime!  Why are you here?")
+      ("🐻" ("🐻" "🐼" "🐻‍❄️" "🦊" "🐹" "🐱" "🐶" "🐨") "They're on the prowl!  Still cute though.")
+      ("🦄" ("🐝" "🦄" "🦋" "🐙" "🐳" "🐬" "🐠" "🐡") "Unicorns are totally real!")
+      ("🌦️" ("☀️" "🌤️" "⛅️" "🌥️" "☁️" "🌦️" "🌧️" "🌨️") "This ain't no fair weather construction!")
+      ("🍇" ("🍑" "🍎" "🍐" "🍊" "🍋" "🍉" "🍇" "🍓") "Tutti frutti, yay!")
+      ("🎄" ("🎄" "🌳" "🌵" "🪴" "🌴" "🍀" "🌿" "🌱") "Oh, it's Prot's neighbours!"))
+    "List with my favourite `org-modern-star' presets.
+    Each element of this list is a list of three elements:
+
+    1. A string that is presented at the minibuffer completion prompt
+      of the command `my-whimsical-org-stars-select'
+
+    2. A list of strings that is set as the value of
+      `org-modern-star'.
+
+    3. A string that describes the aforementioned and is used as the
+      annotation of the completion candidates.")
+
+  (defun my-whimsical-org--annotate (candidate)
+    "Annotate CANDIDATE of `my-whimsical-org--prompt'."
+    (format
+     " -- %s"
+     (nth 2 (assoc candidate my-whimsical-org-stars #'string-match-p))))
+
+  (defun my-whimsical-org--prompt ()
+    "Prompt for a present among `my-whimsical-org-stars'."
+    (let ((completion-extra-properties `(:annotation-function ,#'my-whimsical-org--annotate)))
+      (completing-read
+       "Which `org-modern-star' fits your mood? "
+       (mapcar #'car my-whimsical-org-stars)
+       nil
+       :require-match)))
+
+  (defun my-whimsical-org-stars-select (preset)
+    "Set PRESET as current style of `org-modern-star'.
+
+    When called interactively, PRESET is selected with minibuffer
+    completion.  The list of candidates presents an emoji character
+    that is indicative of the set it belongs to.  Completion
+    annotations are also on display.
+
+    Presets are stored in the variable `my-whimsical-org-stars'.
+
+    When called from Lisp, PRESET is a string that is the `car' of a
+    list among those found in `my-whimsical-org-stars'."
+    (interactive (list (my-whimsical-org--prompt)))
+    (setq org-modern-star
+          (nth 1 (assoc preset my-whimsical-org-stars #'string-match-p)))
+    (when (and (derived-mode-p 'org-mode)
+               org-modern-mode)
+      (org-modern-mode 1)))
+
+
+  (setq org-modern-list
+        '((?+ . "✨")
+          (?- . "🪷")
+          (?* . "⭐️")))
+
+  ;; Enable load after emacs loads so buffers show emoji
+  (defun prot/org-modern--restart-in-buffer (buffer)
+    "Enable `org-modern-mode' and restart the Org buffer.
+                            The intent is to reload changes we have made to its user options."
+    (with-current-buffer buffer
+      (when (derived-mode-p 'org-mode)
+        (org-modern-mode 1)
+        (org-mode-restart))))
+
+  (defun prot/org-modern-enable ()
+    "Enable `org-modern-mode' in relevant buffers.
+                            Run this function after `org-modern' is loaded in the init file."
+    (mapc #'prot/org-modern--restart-in-buffer (buffer-list)))
+
+  (prot/org-modern-enable)
+
+#+end_src
+* Org Protocol
+#+begin_src emacs-lisp
+
+  ;; ;; Load Path to org-mac-link.el
+  ;;  (load-file "~/.emacs.d/packages/org-mac-link.el")
+  ;; ;; Org Protocol Stuff
+  ;; ;; (use-package! org-mac-link
+  ;; ;; :after (org org-goto))
+
+  ;; (defun timu-func-make-capture-frame ()
+  ;; "Create a new frame and run `org-capture'."
+  ;; (interactive)
+  ;; (make-frame '((name . "capture")
+  ;; (top . 300)
+  ;; (left . 700)
+  ;; (width . 80)
+  ;; (height . 25)))
+  ;; (select-frame-by-name "capture")
+  ;; (delete-other-windows)
+  ;; (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
+  ;; (org-capture)))
+
+  ;; (defadvice org-capture-finalize
+  ;; (after delete-capture-frame activate)
+  ;; "Advise capture-finalize to close the frame."
+  ;; (if (equal "capture" (frame-parameter nil 'name))
+  ;; (delete-frame)))
+
+  ;; (defadvice org-capture-destroy
+  ;; (after delete-capture-frame activate)
+  ;; "Advise capture-destroy to close the frame."
+  ;; (if (equal "capture" (frame-parameter nil 'name))
+  ;; (delete-frame)))
+
+  ;; ;; Org-Capture Function for Safari
+  ;; (defun timu-func-url-safari-capture-to-org ()
+  ;; "Call `org-capture-string' on the current front most Safari window.
+  ;; Use `org-mac-link-safari-get-frontmost-url' to capture url from Safari.
+  ;; Triggered by a custom macOS Quick Action with a keyboard shortcut."
+  ;; (interactive)
+  ;; (org-capture-string (org-mac-link-safari-get-frontmost-url) "u")
+  ;; (ignore-errors)
+  ;; (org-capture-finalize))
+
+#+end_src
+* Org-Web-Tools
+#+begin_src emacs-lisp
+
+(require 'org-web-tools)
+
+#+END_SRC
+* Denote
+#+begin_src emacs-lisp
+
+  (require 'denote)
+
+  ;; Remember to check the doc strings of those variables.
+  (setq denote-directory (expand-file-name "~/Documents/sync/org/notes/"))
+  (setq denote-known-keywords
+        '("emacs" "org" "reference" "philosophy" "politics" "misc"))
+  (setq denote-infer-keywords t)
+  (setq denote-sort-keywords t)
+  (setq denote-file-type nil) ; Org is the default, set others here
+
+  ;; We allow multi-word keywords by default.  The author's personal
+  ;; preference is for single-word keywords for a more rigid workflow.
+  (setq denote-allow-multi-word-keywords t)
+
+  (setq denote-date-format nil) ; read doc string
+
+  ;; You will not need to `require' all those individually once the
+  ;; package is available.
+  ;; (require 'denote-retrieve)
+  ;; (require 'denote-link)
+
+  ;; By default, we fontify backlinks in their bespoke buffer.
+  (setq denote-link-fontify-backlinks t)
+
+  ;; Also see `denote-link-backlinks-display-buffer-action' which is a bit
+  ;; advanced.
+
+  ;; If you use Markdown or plain text files (Org renders links as buttons
+  ;; right away)
+  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+
+  ;; (require 'denote-dired)
+  (setq denote-dired-rename-expert nil)
+
+  ;; We use different ways to specify a path for demo purposes.
+  (setq denote-dired-directories
+        (list denote-directory
+              (thread-last denote-directory (expand-file-name "attachments"))
+              (expand-file-name "~/Documents/sync/org/")))
+
+  ;; Generic (great if you rename files Denote-style in lots of places):
+  (add-hook 'dired-mode-hook #'denote-dired-mode)
+  ;;
+  ;; OR if only want it in `denote-dired-directories':
+  ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+
+  ;; Here is a custom, user-level command from one of the examples we
+  ;; showed in this manual.  We define it here and add it to a key binding
+  ;; below.
+  (defun my-denote-journal ()
+    "Create an entry tagged 'journal', while prompting for a title."
+    (interactive)
+    (denote
+     (denote--title-prompt)
+     "journal"))
+
+  ;; Denote does not define any key bindings.  This is for the user to
+  ;; decide.  For example:
+  (let ((map global-map))
+    (define-key map (kbd "C-c n j") #'my-denote-journal) ; our custom command
+    (define-key map (kbd "C-c n n") #'denote)
+    (define-key map (kbd "C-c n N") #'denote-type)
+    (define-key map (kbd "C-c n d") #'denote-date)
+    (define-key map (kbd "C-c n s") #'denote-subdirectory)
+    (define-key map (kbd "C-c n S") #'denote-template-with-subdirectory)
+    (define-key map (kbd "C-c d") #'denote-dired-mode)
+    ;; If you intend to use Denote with a variety of file types, it is
+    ;; easier to bind the link-related commands to the `global-map', as
+    ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
+    ;; `markdown-mode-map', and/or `text-mode-map'.
+    (define-key map (kbd "C-c n i") #'denote-link) ; "insert" mnemonic
+    (define-key map (kbd "C-c n I") #'denote-link-add-links)
+    (define-key map (kbd "C-c n l") #'denote-link-find-file) ; "list" links
+    (define-key map (kbd "C-c n b") #'denote-link-backlinks)
+    ;; Note that `denote-dired-rename-file' can work from any context, not
+    ;; just Dired bufffers.  That is why we bind it here to the
+    ;; `global-map'.
+    (define-key map (kbd "C-c n r") #'denote-dired-rename-file))
+
+  (with-eval-after-load 'org-capture
+    ;; (require 'denote-org-capture)
+    (setq denote-org-capture-specifiers "%l\n%i\n%?")
+    (add-to-list 'org-capture-templates
+                 '("n" "New note (with denote.el)" plain
+                   (file denote-last-path)
+                   #'denote-org-capture
+                   :no-save t
+                   :immediate-finish nil
+                   :kill-buffer t
+                   :jump-to-captured t)))
+
+  ;; ;; Batch rename files marked in dired
+  ;; (defun denote-dired-batch-rename (keywords)
+  ;;   "DEV NOTE 2022-07-16: proof of concept---help flesh it out.
+
+  ;;   Rename marked files in Dired using the following pattern:
+
+  ;;   - the file's existing file name is retained and becomes the FILE
+  ;;     field, per Denote's file-naming scheme;
+
+  ;;   - an identifier is prepended to the FILE;
+
+  ;;   - the file's contents are not touched (no insertion of front
+  ;;     matter, no other changes);
+
+  ;;   - the file's extension is retained;
+
+  ;;   - a prompt is asked once for the KEYWORDS field and the input is
+  ;;     applied to all files."
+  ;;   (interactive (list (denote--keywords-prompt)) dired-mode)
+  ;;   (if-let ((marks (dired-get-marked-files)))
+  ;;       (progn
+  ;;         (dolist (file marks)
+  ;;           (let* ((dir (file-name-directory file))
+  ;;                  (title (file-name-sans-extension (file-name-nondirectory file)))
+  ;;                  (extension (file-name-extension file t))
+  ;;                  (new-name (denote--format-file
+  ;;                             dir
+  ;;                             (denote-dired--file-name-id file)
+  ;;                             keywords
+  ;;                             (denote--sluggify title)
+  ;;                             extension)))
+  ;;             (rename-file (file-name-nondirectory file) new-name)))
+  ;;         (revert-buffer))
+  ;;     (user-error "No marked files; aborting")))
+
+  ;; Denote Templates
+  (setq denote-templates
+        `((journal . ,(concat "* Weather:"
+                              "\n\n\n"
+                              "* Goals:"
+                              "\n\n\n"
+                              "* I'm grateful for:"
+                              "\n\n\n"))))
+
+
+  ;; Function for creating template notes in directory: `denote-subdirectory' but first ask for a template
+  (defun denote-template-with-subdirectory ()
+    "Create note while prompting for a template and subdirectory.
+
+    This is equivalent to calling `denote' when `denote-prompts' is
+    set to \\='(template subdirectory title keywords)."
+    (declare (interactive-only t))
+    (interactive)
+    (let ((denote-prompts '(template subdirectory title keywords)))
+      (call-interactively #'denote)))
+
+
+
+#+end_src
+* Treemacs
+#+begin_src emacs-lisp
+
+  ;; Treemacs open/close
+  (global-set-key (kbd "C-c t") 'treemacs)
+
+  ;; Make sure that C-x o can cycle through to treemacs
+  (setq treemacs-is-never-other-window nil)
+
+#+end_src
+* VTerm
+#+begin_src emacs-lisp
+
+(use-package vterm
+    :ensure t)
+
+#+end_src
+* MU4E
+#+begin_src emacs-lisp
+
+  ;;   ;; mu4e Keybind
+  ;;   (global-set-key (kbd "C-c m") 'mu4e)
+  ;;   (global-set-key (kbd "C-c r") 'mu4e-compose-reply)
+
+  ;; ;; Maximum headers shown in search
+  ;; (setq mu4e-headers-results-limit 5000)
+
+  ;;   ;; Icons for listing views
+  ;;   (setq mu4e-headers-unread-mark    '("u" . "📩 "))
+  ;;   (setq mu4e-headers-draft-mark     '("D" . "🚧 "))
+  ;;   (setq mu4e-headers-flagged-mark   '("F" . "🚩 "))
+  ;;   (setq mu4e-headers-new-mark       '("N" . "✨ "))
+  ;;   (setq mu4e-headers-passed-mark    '("P" . "↪ "))
+  ;;   (setq mu4e-headers-replied-mark   '("R" . "↩ "))
+  ;;   (setq mu4e-headers-seen-mark      '("S" . "👀 "))
+  ;;   (setq mu4e-headers-trashed-mark   '("T" . "🗑️"))
+  ;;   (setq mu4e-headers-attach-mark    '("a" . "📎 "))
+  ;;   (setq mu4e-headers-encrypted-mark '("x" . "🔑 "))
+  ;;   (setq mu4e-headers-signed-mark    '("s" . "✍️ "))
+
+  ;;   ;; mu4e Alert (for modeline)
+  ;;   ;; (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+
+  ;;   ;; Change luminance for email displays
+  ;;   (setq shr-color-visible-luminance-min 80)
+
+  ;;   ;; ;; Attach items from dired into mu4e - from Prot
+  ;;   ;; (require 'gnus-dired)
+  ;;   ;; (add-hook 'dired-mode-hook #'gnus-dired-mode)
+
+  ;;   ;; ;; Column faces colors for Mu4e - taken out because it kills indentation in threading
+  ;;   ;; (use-package mu4e-column-faces
+  ;;   ;;   :after mu4e
+  ;;   ;;   :config (mu4e-column-faces-mode))
+
+  ;;   ;; load mu4e from the installation path.
+  ;;   ;; yours might differ check with the Emacs installation
+  ;;   (use-package mu4e
+  ;;     :load-path  "/opt/homebrew/Cellar/mu/1.10.3/share/emacs/site-lisp/mu/mu4e")
+
+  ;;   ;; Message Elide lines
+  ;;   (setq message-elide-ellipsis "\n> [... %l lines elided]\n")
+
+  ;;   ;; for sending mails
+  ;;   (require 'smtpmail)
+
+  ;;   ;; we installed this with homebrew
+  ;;   (setq mu4e-mu-binary (executable-find "mu"))
+
+  ;;   ;; this is the directory we created before:
+  ;;   (setq mu4e-maildir "~/.maildir")
+
+  ;;   ;; this command is called to sync imap servers:
+  ;;   (setq mu4e-get-mail-command (concat (executable-find "mbsync") " -a"))
+  ;;   ;; how often to call it in seconds:
+  ;;   (setq mu4e-update-interval 120)
+
+  ;;   ;; save attachment to desktop by default
+  ;;   ;; or another choice of yours:
+  ;;   (setq mu4e-attachment-dir "~/Downloads")
+
+  ;;   ;; rename files when moving - needed for mbsync:
+  ;;   (setq mu4e-change-filenames-when-moving t)
+
+  ;;   ;; Config Mesagges
+  ;;   (setq mu4e-use-fancy-chars t
+  ;;         mu4e-view-show-images t
+  ;;         mu4e-view-image-max-width 800
+  ;;         message-signature-insert-empty-line t
+  ;;         message-citation-line-function 'message-insert-formatted-citation-line
+  ;;         message-citation-line-format "On %Y-%m-%d, %f wrote:\n" ;;message-citation-line-format "%N @ %Y-%m-%d %H:%M %Z:\n" "On %Y-%m-%d, %f wrote:" "On %Y-%m-%d %a at %H:%M %Z, %f wrote:\n"
+  ;;         )
+
+  ;;   (setq mu4e-context-policy 'pick-first) ;; start with the first (default) context;
+  ;;   (setq mu4e-compose-context-policy 'ask) ;; ask for context if no context matches;
+
+
+  ;;   ;; don't keep message compose buffers around after sending:
+  ;;   (setq message-kill-buffer-on-exit t)
+
+  ;;   ;; Private Org File for account settings
+  ;;   (load (expand-file-name "private.el" user-emacs-directory))
+
+  ;;   ;; mu4e cc & bcc
+  ;;   ;; this is custom as well
+  ;;   (add-hook 'mu4e-compose-mode-hook
+  ;;             (defun timu/add-cc-and-bcc ()
+  ;;               "My Function to automatically add Cc & Bcc: headers.
+  ;;                      This is in the mu4e compose mode."
+  ;;               (save-excursion (message-add-header "Cc:\n"))
+  ;;               (save-excursion (message-add-header "Bcc:\n"))))
+
+
+  ;;   ;; store link to message if in header view, not to header query:
+  ;;   (setq org-mu4e-link-query-in-headers-mode nil)
+  ;;   ;; don't have to confirm when quitting:
+  ;;   (setq mu4e-confirm-quit nil)
+  ;;   ;; number of visible headers in horizontal split view:
+  ;;   (setq mu4e-headers-visible-lines 20)
+  ;;   ;; hide "mu4e Retrieving mail..." msg in mini buffer:
+  ;;   (setq mu4e-hide-index-messages t)
+  ;;   ;; customize the reply-quote-string:
+  ;;   (setq message-citation-line-format "%N @ %Y-%m-%d %H:%M :\n")
+  ;;   ;; M-x find-function RET message-citation-line-format for docs:
+  ;;   (setq message-citation-line-function 'message-insert-formatted-citation-line)
+
+
+  ;;   ;; Encryption
+  ;;   (require 'mm-encode)
+  ;;   (setq mm-encrypt-option 't) ; use 'guided if you need more control
+  ;;   (setq mm-sign-option 't)    ; same
+
+  ;;   (require 'mml-sec)
+  ;;   (setq mml-secure-openpgp-encrypt-to-self t)
+  ;;   (setq mml-secure-openpgp-sign-with-sender t)
+  ;;   (setq mml-secure-smime-encrypt-to-self t)
+  ;;   (setq mml-secure-smime-sign-with-sender t)
+
+
+
+#+end_src
+* Dashboard
+#+begin_src emacs-lisp
+
+  (require 'dashboard)
+  (dashboard-setup-startup-hook)
+
+  ;; Set the title
+  (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
+  ;; Set the banner
+  (setq dashboard-startup-banner "~/.emacs.d/emacsGnuColor.svg")
+
+  ;; Content is not centered by default. To center, set
+  (setq dashboard-center-content t)
+
+  ;; To disable shortcut "jump" indicators for each section, set
+  (setq dashboard-show-shortcuts nil)
+
+  (add-to-list 'dashboard-items '(agenda) t)
+
+  (setq dashboard-items '((agenda . 5)
+                          (recents  . 2)
+                          (bookmarks . 2)
+                          (projects . 2)))
+
+  (setq dashboard-display-icons-p t) ;; display icons on both GUI and terminal
+  (setq dashboard-icon-type 'all-the-icons) ;; use `all-the-icons' package
+  (setq dashboard-set-file-icons t)
+
+#+end_src
+* Dired+
+#+begin_src emacs-lisp
+
+  ;; (add-to-list 'load-path "~/.emacs.d/dired+.el")
+  ;; (require 'dired+)
+
+  ;; (diredp-toggle-find-file-reuse-dir 1)
+
+  ;; (setq diredp-toggle-tags-on-off t) ; Enables tag display
+
+#+END_src
+* Dirvish
+#+begin_src emacs-lisp
+
+        (dirvish-override-dired-mode)
+        (setq-default dirvish-emacs-bin "/opt/homebrew/Cellar/emacs-mac/emacs-28.2-mac-9.1/bin/emacs-28.2")
+
+  (dirvish-override-dired-mode)
+  (global-set-key (kbd "C-x d") #'dirvish)
+
+
+
+  ;; (setq dirvish-emacs-bin "/Applications/emacssl")
+
+
+        ;;     (defun summeremacs/message-arguments-of-func (orig &rest args)
+        ;;        "Call ORIG on ARGS, but print a message before actually doing so."
+        ;;        (message "Calling %s with arguments: " orig)
+        ;;        (mapc (lambda (a) (message "- %S" a)) args)
+        ;;        (apply orig args))
+
+        ;; (advice-add 'dirvish-dir-data-proc-s :around 'summeremacs/message-arguments-of-func)
+
+
+#+end_src
+* Tramp
+#+begin_src emacs-lisp
+
+  ;; (setq tramp-verbose 10) ;; Used to debug TRAMP
+
+#+end_src
+* Shrface - Archive entire web pages
+#+begin_src emacs-lisp
+
+
+(use-package shrface
+  :defer t
+  :config
+  (shrface-basic)
+  (shrface-trial)
+  (shrface-default-keybindings) ; setup default keybindings
+  (setq shrface-href-versatile t))
+
+(use-package eww
+  :defer t
+  :init
+  (add-hook 'eww-after-render-hook #'shrface-mode)
+  :config
+  (require 'shrface))
+
+(use-package nov
+  :defer t
+  :init
+  (add-hook 'nov-mode-hook #'shrface-mode)
+  :config
+  (require 'shrface)
+  (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
+  (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions)))
+
+(use-package anki
+  :defer t
+  :load-path "~/.emacs.d/lisp/anki/"
+  :init
+  (add-hook 'anki-mode-hook #'shrface-mode)
+  (autoload 'anki "anki")
+  (autoload 'anki-browser "anki")
+  (autoload 'anki-list-decks "anki")
+  :config
+  (require 'shrface)
+  (setq anki-shr-rendering-functions (append anki-shr-rendering-functions shr-external-rendering-functions))
+  (setq sql-sqlite-program "/usr/bin/sqlite3")
+  (setq anki-collection-dir "/Users/chandamon/Library/Application Support/Anki2/User 1"))
+
+  #+end_src
+* Duplicates.el - Duplicates finder for photos
+#+begin_src emacs-lisp
+
+  ;; Load Path to duplicates.el
+   ;; (load-file "~/.emacs.d/packages/duplicates.el")
+
+
+#+end_src
