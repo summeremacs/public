@@ -74,3 +74,31 @@ Here's a possible sequence for your study plan, based on the books above:
 6. Finally, once you have a good grasp of quantum mechanics, you can move on to special and general relativity, which describe the behavior of objects in motion and the curvature of spacetime.
 
 This is just one possible study plan, though. You may find that you want to spend more or less time on certain topics, or that you want to study certain topics in a different order. The important thing is to have a plan and work through the material systematically.
+
+
+* Addendum from Quora:
+
+But, if you must, here's what I'd recommend, and likely in this order:
+1. A good single-variable calculus text.  I can't recommend one, but I used Hughes-Hallet's.  Seems pretty specific to Arizona, though.
+2. Halliday and Resnick/Halliday Resnick and Krane - Intro to physics, with calculus.  Go through both volumes.
+3. Multivariable calculus.  You'll need it, trust me.
+4. Marion's Classical Dynamics.  You need something between Halliday and Goldstein, and this is a popular one.
+5. Griffiths' Electrodynamics.  A good intro to Maxwell's equations.
+6. Lay - Linear Algebra
+7. Hecht, Optics.  A classic, but not as dense as Born & Wolf.
+8. Griffiths' Quantum Mechanics
+9. Kittel and Kroemer - Thermal Physics
+10. Arfken and Weber - Mathematical Methods for Physicists
+11. Bevington and Robinson - Data Reduction and Error Analysis for the Physical Sciences (I am an experimentalist, after all)
+12. The Feynman Lectures on Physics (good as a reference and to deepen understanding)
+13.
+
+As for graduate school, even with a master's degree, at a bare minimum, you'll need (in no particular order):
+1. Goldstein's Classical Mechanics
+2. J.D. Jackson's Electrodynamics (the Big Red/Blue/Green Bible).  Fulvio Melia's companion text is also super-helpful in this study, but will not stand alone.
+3. Sakurai's Quantum Mechanics
+4. Huang's Statistical Mechanics, along with Frederick's intro in the subject
+5. Rybicki & Lightman's work on Radiative Processes in Astrophysics (good for any radiation detection/simulation work)
+
+
+Also read this book "Higher math for beginners of physics students by Ya. Zeldovich"
