@@ -91,7 +91,6 @@
 - [ ] Uncle Buck
 - [ ] Valley Girl
 - [X] War Games
-- [ ] War Games
 - [X] Weird Science
 - [ ] When Harry Met Sally
 - [X] Willow
