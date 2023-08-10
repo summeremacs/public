@@ -19,6 +19,7 @@
 - [X] Blade Runner
 - [ ] Blazing Saddles (1974)
 - [X] Brazil
+- [ ] Brothers Lionheart (1977)
 - [ ] Buckaroo Banzai
 - [X] Clue
 - [ ] Conan the Barbarian
@@ -61,6 +62,7 @@
 - [X] Risky Business
 - [ ] Robin Hood: Men in Tights (1993)
 - [ ] Robocop
+- [ ] Ronia, the Robber's Daughter (1984)
 - [ ] Saint Elmo's Fire
 - [ ] She's Having a Baby
 - [ ] Short Circuit
@@ -97,6 +99,7 @@
 - [ ] Working 9 to 5
 - [X] Working Girl
 - [X] Young Frankenstein (1974)
+
 
 * Shows
 
