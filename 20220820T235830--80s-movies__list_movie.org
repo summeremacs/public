@@ -9,35 +9,42 @@
 * 80s Movies
 - [X] A Fish Called Wanda
 - [ ] A Land Before Time
+- [ ] After Hours
 - [ ] Baby's Day Out.
-- [ ] Back to the Future
+- [X] Back to the Future (1, 2, & 3)
 - [X] Beethoven
 - [X] Better Off Dead
-- [ ] Beverly Hills Cop 1 & 2
+- [ ] Beverly Hills Cop (1 & 2)
+- [ ] Bill & Ted (1 & 2)
 - [X] Blade Runner
 - [ ] Blazing Saddles (1974)
 - [X] Brazil
+- [ ] Buckaroo Banzai
 - [X] Clue
 - [ ] Conan the Barbarian
 - [X] Dark Crystal
 - [X] Dead Poets Society
 - [ ] Dennis the Menace
-- [ ] Die Hard
+- [ ] Desperately Seeking Susan
+- [X] Die Hard
 - [ ] Dune
 - [ ] Dutch
 - [X] E.T.
+- [ ] Fast Times at Ridgemont High
 - [X] Ferris Bueller's Day Off
+- [ ] Field of Dreams
 - [X] Flashdance
 - [X] Footloose
-- [ ] Ghostbusters
+- [X] Ghostbusters
 - [X] Heathers
 - [ ] High Anxiety (1977)
 - [ ] Highlander
 - [ ] History of the World, Part I (1981)
-- [ ] Home Alone
+- [X] Home Alone
 - [ ] Killer Klowns from Outer Space
 - [ ] Kung Fury
 - [X] Legend
+- [X] Liquid Sky
 - [X] Little Shop of Horrors
 - [X] Mannequin
 - [ ] Mr. Mom
@@ -47,7 +54,10 @@
 - [X] Planes, Trains and Automobiles
 - [ ] Poltergeist
 - [X] Pretty in Pink
+- [X] Purple Rain
 - [ ] Raiders of the Lost Ark
+- [X] Real Genius
+- [ ] Repo Man
 - [X] Risky Business
 - [ ] Robin Hood: Men in Tights (1993)
 - [ ] Robocop
@@ -57,26 +67,36 @@
 - [ ] Silent Movie (1976)
 - [X] Sixteen Candles
 - [ ] Some Kind of Wonderful
-- [X] Spaceballs
-- [ ] Spaceballs (1987)
+- [X] Spaceballs (1987)
 - [ ] Stand By Me
+- [ ] Steel Magnolias
+- [ ] Stripes
 - [X] The Breakfast Club
 - [ ] The Great Outdoors
+- [X] The Karate Kid (1 & 2)
 - [ ] The Last Starfighter
 - [ ] The Last Unicorn
+- [X] The Lost Boys
 - [X] The Princess Bride
 - [X] The Producers (1967)
-- [ ] The Shining
-- [ ] The Terminator
+- [X] The Shining
+- [X] The Terminator
 - [ ] The Twelve Chairs (1970)
+- [X] Time Bandits
 - [X] Top Gun
 - [ ] Total Recall
+- [ ] Trading Places
 - [ ] Tron
 - [ ] Twins
 - [ ] Uncle Buck
+- [ ] Valley Girl
 - [X] War Games
+- [ ] War Games
 - [X] Weird Science
+- [ ] When Harry Met Sally
 - [X] Willow
+- [ ] Working 9 to 5
+- [X] Working Girl
 - [X] Young Frankenstein (1974)
 
 * Shows
