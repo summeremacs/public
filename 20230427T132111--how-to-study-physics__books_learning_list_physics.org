@@ -102,3 +102,14 @@ As for graduate school, even with a master's degree, at a bare minimum, you'll n
 
 
 Also read this book "Higher math for beginners of physics students by Ya. Zeldovich"
+
+
+* Physics suggestions from Mastodon
+
+** @summeremacs emmy (emmy.mentat.org/) is a computational algebra system built in clojure to do the things in Structure and Interpretation of Classical Mechanics. Clerk is a clojure notebook it runs in. Why get one new area of study when you can get 3 or 4? (actually, one new area is probably enough, what am I thinking! why do I do this to myself!)
+
+** From Charlotte Cochard: also depending on how much money you want to spend, you can register for classes online (like at the Open University in the UK if you want English language or CNAM if you think that you can follow in French)
+
+**  I don't know most of the books recommended. I don't know how you want to go about it, but I would say that reading "University Physics" by Young and Freedman is a good place to start. This is what we use to teach first year. https://www.amazon.fr/University-Physics-Modern-Global/dp/1292100311
+
+** If you see that you get stuck with the math, you can always look it up as needed. (I am not in favour of front loading with a bunch of abstract concepts when few are actually useful, but that's a preference)

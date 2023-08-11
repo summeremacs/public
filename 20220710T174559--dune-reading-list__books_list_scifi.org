@@ -1,0 +1,24 @@
+#+title:      dune reading list
+#+date:       [2022-07-10 Sun 17:45]
+#+filetags:   books  list  scifi
+#+identifier: 20220710T174559
+
+* Dune Reading List:
+
+- [ ]  The Butlerian Jihad
+- [ ]  The Machine Crusade
+- [ ]  The Battle of Corrin
+- [ ]  House Atreides
+- [ ]  House Harkonnen
+- [ ]  House Corrino
+- [ ]  Dune (1)
+- [ ]  Paul of Dune
+- [ ]  Dune Messiah (2)
+- [ ]  The Winds of Dune
+- [ ]  Children of Dune (3)
+- [ ]  God Emperor of Dune (4)
+- [ ]  Heretics of Dune (5)
+- [ ]  Chapterhouse Dune (6)
+- [ ]  Hunters of Dune
+- [ ]  Sandworms of Dune
+- [ ]  Dune Genesis
